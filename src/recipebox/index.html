@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/icons/grb_favicon.png" />
+    <title>Grandma's Recipe Box | My Recipe Box</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/js/recipebox.js" type="module"></script>
+  </head>
+
+  <body>
+    <header id="main-header"></header>
+
+    <main>
+      <section class="recipebox-header">
+        <div class="container">
+          <!-- Search Bar -->
+          <div class="search-bar">
+            <div class="input-group">
+              <input type="text" id="box-search" class="form-control" placeholder="Search your recipes..." aria-label="Search saved recipes" />
+              <button class="btn" type="button" id="box-search-btn">🔍</button>
+            </div>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="filter-tabs" id="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="breakfast">Breakfast</button>
+            <button class="filter-tab" data-filter="lunch">Lunch</button>
+            <button class="filter-tab" data-filter="dinner">Dinner</button>
+            <button class="filter-tab" data-filter="dessert">Dessert</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recipe Card Grid -->
+      <section>
+        <div class="card-grid" id="recipe-card-grid">
+          <!-- Cards rendered by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-box" id="empty-box" style="display: none;">
+          <h3>Your recipe box is empty!</h3>
+          <p>Search for recipes or take the quiz to get started.</p>
+          <a href="/recipebox/index.html" class="btn-get-started">Add Your First Recipe</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Quiz Container (injected by OnboardingQuiz.mjs) -->
+    <div id="quiz-container"></div>
+
+    <footer id="main-footer"></footer>
+  </body>
+</html>

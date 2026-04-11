@@ -1,0 +1,26 @@
+{
+  "name": "grandma-recipe-box",
+  "version": "1.0.0",
+  "description": "Grandma's Recipe Box - A personal recipe saver web application",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build --emptyOutDir",
+    "preview": "vite preview",
+    "lint": "eslint src/**/*.js src/**/*.mjs",
+    "format": "prettier --ignore-path ./.gitignore --write \"./**/*.{html,json,js,mjs,css}\""
+  },
+  "author": "James Burdick",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.2.5",
+    "vite": "^8.0.4"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  }
+}
