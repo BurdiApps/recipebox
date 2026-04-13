@@ -106,8 +106,8 @@ export default class ExternalServices {
     if (this.apiKey && this.apiKey !== 'your_key_here') {
       return await this._fetchFromSpoonacular(query, filters);
     }
-    // Otherwise return filtered mock data
-    return this._searchMockData(query, filters);
+      // Otherwise, return an empty array or handle the case when no API key is provided
+      return [];
   }
 
   // Get a single recipe by ID
@@ -118,20 +118,29 @@ export default class ExternalServices {
       );
       return await response.json();
     }
-    return MOCK_RECIPES.find((r) => r.id === id) || null;
+      // return MOCK_RECIPES.find((r) => r.id === id) || null;
+      return null; // or handle the case when no API key is provided
   }
 
-  // TikTok oEmbed — stub for now, real integration in Week 6
-  // eslint-disable-next-line no-unused-vars
+  // TikTok oEmbed integration
   async getTikTokEmbed(url) {
-    // TODO: call https://www.tiktok.com/oembed?url=<url>
-    // May need a proxy due to CORS restrictions
-    return {
-      title: 'TikTok Recipe Video',
-      author_name: 'Chef',
-      thumbnail_url: '',
-      html: `<p>TikTok embed placeholder for: ${url}</p>`,
-    };
+    try {
+      // Use corsproxy.io to bypass CORS for TikTok oEmbed
+      const proxy = 'https://corsproxy.io/?';
+      const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+      const res = await fetch(proxy + encodeURIComponent(oembedUrl));
+      if (!res.ok) throw new Error('TikTok oEmbed failed');
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      // Fallback: show a message
+      return {
+        title: 'TikTok Recipe Video',
+        author_name: '',
+        thumbnail_url: '',
+        html: `<p style="color:#c41e3d">TikTok embed failed to load.<br>Try a different video or check CORS/proxy settings.</p><p><a href="${url}" target="_blank">Open in TikTok ↗</a></p>`
+      };
+    }
   }
 
   // --- Private methods ---
@@ -150,40 +159,11 @@ export default class ExternalServices {
     );
     const data = await response.json();
     return data.results || [];
-  }
 
-  _searchMockData(query, filters) {
-    let results = [...MOCK_RECIPES];
 
-    if (query) {
-      const q = query.toLowerCase();
-      results = results.filter(
-        (r) =>
-          r.title.toLowerCase().includes(q) ||
-          r.extendedIngredients.some((i) => i.name.toLowerCase().includes(q))
-      );
+
+
+
+
     }
-
-    if (filters.cuisine) {
-      results = results.filter((r) =>
-        r.cuisines.some(
-          (c) => c.toLowerCase() === filters.cuisine.toLowerCase()
-        )
-      );
-    }
-
-    if (filters.maxReadyTime) {
-      results = results.filter(
-        (r) => r.readyInMinutes <= Number(filters.maxReadyTime)
-      );
-    }
-
-    if (filters.type) {
-      results = results.filter(
-        (r) => r.category === filters.type.toLowerCase()
-      );
-    }
-
-    return results;
-  }
 }

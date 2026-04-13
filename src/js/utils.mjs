@@ -29,12 +29,16 @@ export function getRecipeBox() {
 
 export function saveToRecipeBox(recipe) {
   const box = getRecipeBox();
-  // prevent duplicates
-  const exists = box.find((r) => r.id === recipe.id);
+  // prevent duplicates by id OR title
+  const exists = box.find(
+    (r) => r.id === recipe.id || r.title.toLowerCase() === recipe.title.toLowerCase()
+  );
   if (!exists) {
     box.push(recipe);
     setLocalStorage(RECIPE_BOX_KEY, box);
+    return true;
   }
+  return false;
 }
 
 export function removeFromRecipeBox(id) {

@@ -34,23 +34,92 @@
         </div>
       </section>
 
-      <!-- Recipe Card Grid -->
-      <section>
-        <div class="card-grid" id="recipe-card-grid">
-          <!-- Cards rendered by JS -->
-        </div>
+      <!-- Recipe Box Display -->
+      <section class="recipe-box-section">
+        <div class="container">
+          <div class="recipe-box-layout">
+            <!-- Featured Card Carousel (the "box") -->
+            <div class="recipe-box-carousel">
+              <div class="box-visual" id="box-visual">
+                <div class="box-lid" id="box-lid"></div>
+                <div class="box-body">
+                  <div class="carousel-stage" id="carousel-stage">
+                    <!-- Active card rendered by JS -->
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-controls" id="carousel-controls">
+                <button class="carousel-btn" id="carousel-prev" aria-label="Previous card">◀</button>
+                <button class="carousel-btn carousel-btn-add" id="carousel-add" aria-label="Add new recipe">＋</button>
+                <button class="carousel-btn" id="carousel-next" aria-label="Next card">▶</button>
+              </div>
+              <p class="carousel-counter" id="carousel-counter"></p>
+            </div>
 
-        <!-- Empty State -->
-        <div class="empty-box" id="empty-box" style="display: none;">
-          <h3>Your recipe box is empty!</h3>
-          <p>Search for recipes or take the quiz to get started.</p>
-          <a href="/recipebox/index.html" class="btn-get-started">Add Your First Recipe</a>
+            <!-- Side Card Grid (desktop only) -->
+            <div class="recipe-box-grid" id="recipe-box-grid">
+              <!-- Smaller cards rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-box" id="empty-box" style="display: none;">
+            <h3>Your recipe box is empty!</h3>
+            <p>Search for recipes or take the quiz to get started.</p>
+            <button class="btn-get-started" id="open-search-btn">Add Your First Recipe</button>
+          </div>
+
+          <!-- Drag-to-Trash Drop Zone -->
+          <div class="trash-zone" id="trash-zone">
+            <span>🗑</span>
+            <p>Drop here to delete</p>
+          </div>
         </div>
+      </section>
+
+      <!-- Recipe Search Panel -->
+      <section>
+        <div id="recipe-search-container" class="container"></div>
       </section>
     </main>
 
     <!-- Quiz Container (injected by OnboardingQuiz.mjs) -->
     <div id="quiz-container"></div>
+
+    <!-- Custom Card Modal -->
+    <div class="custom-card-overlay" id="custom-card-overlay" style="display: none;">
+      <div class="custom-card-modal">
+        <h3>Create a Custom Card</h3>
+        <p>Add your own recipe — paste a TikTok link, give it a name, and save!</p>
+        <form id="custom-card-form">
+          <div class="custom-field">
+            <label for="custom-title">Recipe Title *</label>
+            <input type="text" id="custom-title" class="form-control" placeholder="e.g. Grandma's Secret Cookies" required />
+          </div>
+          <div class="custom-field">
+            <label for="custom-tiktok">TikTok URL</label>
+            <input type="url" id="custom-tiktok" class="form-control" placeholder="https://www.tiktok.com/..." />
+          </div>
+          <div class="custom-field">
+            <label for="custom-category">Category</label>
+            <select id="custom-category" class="form-select">
+              <option value="dinner">Dinner</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dessert">Dessert</option>
+            </select>
+          </div>
+          <div class="custom-field">
+            <label for="custom-notes">Notes</label>
+            <textarea id="custom-notes" class="form-control" rows="3" placeholder="Any notes, ingredients, or steps..."></textarea>
+          </div>
+          <div class="custom-card-actions">
+            <button type="submit" class="btn btn-primary">Save Card</button>
+            <button type="button" class="btn btn-outline-secondary" id="custom-card-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <footer id="main-footer"></footer>
   </body>
