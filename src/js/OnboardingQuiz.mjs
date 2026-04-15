@@ -101,7 +101,7 @@ export default class OnboardingQuiz {
     this.container.innerHTML = `
       <div class="quiz-overlay">
         <div class="quiz-modal">
-          <p style="font-size: 0.85rem; color: #999;">Question ${this.currentStep} of ${QUESTIONS.length}</p>
+          <p style="font-size: 0.85rem; color: #666;">Question ${this.currentStep} of ${QUESTIONS.length}</p>
           <h3>${q.question}</h3>
           <div class="quiz-options" id="quiz-options">
             ${optionsHtml}
@@ -160,12 +160,15 @@ export default class OnboardingQuiz {
   }
 
   async _finishQuiz() {
-    // Show loading state
+    // Show loading state with spinner
     this.container.innerHTML = `
       <div class="quiz-overlay">
         <div class="quiz-modal">
-          <h3>Finding recipes for you...</h3>
-          <p>Setting up your recipe box with 5 starter recipes!</p>
+          <div class="loading-spinner" role="status">
+            <div class="spinner"></div>
+            <h3>Finding recipes for you...</h3>
+            <p>Setting up your recipe box with 5 starter recipes!</p>
+          </div>
         </div>
       </div>
     `;

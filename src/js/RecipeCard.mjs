@@ -35,10 +35,10 @@ export default class RecipeCard {
         <!-- FRONT -->
         <div class="card-front">
           <img src="${this.recipe.image || '/images/icons/placeholder.svg'}"
-               alt="${this.recipe.title}"
+               alt=""
                onerror="this.src='/images/icons/placeholder.svg'" />
           <div class="card-front-body">
-            <h4>${this.recipe.title}</h4>
+            <h2>${this.recipe.title}</h2>
             <p class="card-meta">
               ${categoryLabel}
               ${cuisineLabel ? ' · ' + cuisineLabel : ''}
@@ -51,14 +51,14 @@ export default class RecipeCard {
         <!-- BACK -->
         <div class="card-back">
           <div class="card-back-scroll">
-            <h4>${this.recipe.title}</h4>
+            <h2>${this.recipe.title}</h2>
 
-            ${ingredients ? `<div class="card-section"><h5>Ingredients</h5><ul class="card-ingredients">${ingredients}</ul></div>` : ''}
+            ${ingredients ? `<div class="card-section"><h3>Ingredients</h3><ul class="card-ingredients">${ingredients}</ul></div>` : ''}
 
-            ${this.recipe.instructions ? `<div class="card-section"><h5>Instructions</h5><p class="card-instructions">${this.recipe.instructions}</p></div>` : ''}
+            ${this.recipe.instructions ? `<div class="card-section"><h3>Instructions</h3><p class="card-instructions">${this.recipe.instructions}</p></div>` : ''}
 
             <div class="card-section tiktok-section" id="tiktok-${this.recipe.id}">
-              <h5>TikTok Video</h5>
+              <h3>TikTok Video</h3>
               ${this.recipe.tiktokUrl ? `<div class="tiktok-embed-container" data-url="${this.recipe.tiktokUrl}"></div>` : '<p class="tiktok-placeholder">No TikTok video linked yet.</p>'}
               <div class="tiktok-input-group">
                 <input type="url" class="form-control form-control-sm tiktok-url-input"
@@ -214,13 +214,10 @@ export default class RecipeCard {
       section.insertBefore(embedContainer, section.querySelector('.tiktok-input-group'));
     }
 
-    embedContainer.innerHTML = '<p>Loading TikTok embed...</p>';
+    embedContainer.innerHTML = '<div class="loading-spinner" role="status"><div class="spinner"></div><p>Loading TikTok embed...</p></div>';
 
     const embedData = await this.services.getTikTokEmbed(url);
-    embedContainer.innerHTML = embedData.html;
-
-    // Ensure TikTok embed script runs
-    this._injectTikTokScript();
+    this._renderTikTokPreview(embedContainer, embedData, url);
 
     if (placeholder) placeholder.remove();
 
@@ -235,19 +232,30 @@ export default class RecipeCard {
     if (!embedContainer) return;
 
     const embedData = await this.services.getTikTokEmbed(url);
-    embedContainer.innerHTML = embedData.html;
-    this._injectTikTokScript();
-
+    this._renderTikTokPreview(embedContainer, embedData, url);
   }
 
-  _injectTikTokScript() {
-    // Remove any existing TikTok embed.js script to avoid duplicates
-    const oldScript = document.querySelector('script[src^="https://www.tiktok.com/embed.js"]');
-    if (oldScript) oldScript.remove();
-    const script = document.createElement('script');
-    script.src = 'https://www.tiktok.com/embed.js';
-    script.async = true;
-    document.body.appendChild(script);
+  _renderTikTokPreview(container, data, url) {
+    if (data.thumbnail_url) {
+      const altText = (data.title || 'TikTok video').slice(0, 80);
+      container.innerHTML = `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="tiktok-preview">
+          <img src="${data.thumbnail_url}" alt="${altText}" />
+          <span class="tiktok-play-btn" aria-hidden="true">▶</span>
+        </a>
+        <p class="tiktok-author">${data.author_name ? '@' + data.author_name : ''}</p>
+        <p class="tiktok-title">${data.title || ''}</p>
+      `;
+    } else {
+      // Fallback: styled link card when API can't return a thumbnail
+      container.innerHTML = `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="tiktok-preview tiktok-fallback">
+          <span class="tiktok-fallback-icon">♪</span>
+          <span class="tiktok-play-btn" aria-hidden="true">▶</span>
+        </a>
+        <p class="tiktok-title">Open in TikTok ↗</p>
+      `;
+    }
   }
 
   _updateRecipeInStorage() {

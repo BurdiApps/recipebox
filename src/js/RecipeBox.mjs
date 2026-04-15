@@ -172,7 +172,7 @@ export default class RecipeBox {
     clone.classList.add('card-fly-clone');
     clone.innerHTML = `
       <img src="${recipe.image || '/images/icons/placeholder.svg'}"
-           alt="${recipe.title}"
+           alt=""
            onerror="this.src='/images/icons/placeholder.svg'" />
       <p>${recipe.title}</p>
     `;
@@ -217,7 +217,7 @@ export default class RecipeBox {
 
       thumb.innerHTML = `
         <img src="${recipe.image || '/images/icons/placeholder.svg'}"
-             alt="${recipe.title}"
+             alt=""
              onerror="this.src='/images/icons/placeholder.svg'" />
         <p>${recipe.title}</p>
       `;

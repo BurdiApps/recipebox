@@ -12,6 +12,12 @@ loadHeaderFooter();
 const quiz = new OnboardingQuiz('quiz-container');
 quiz.init();
 
+// --- Retake Quiz button ---
+document.getElementById('retake-quiz-btn')?.addEventListener('click', () => {
+  localStorage.removeItem('grb-quiz-done');
+  quiz.init();
+});
+
 // --- Initialize Recipe Box (carousel + grid) ---
 const recipeBox = new RecipeBox({
   stageId: 'carousel-stage',
@@ -37,6 +43,15 @@ document.getElementById('carousel-next')?.addEventListener('click', () => {
   recipeBox.next();
 });
 
+// --- Keyboard navigation for carousel (left/right arrows) ---
+document.addEventListener('keydown', (e) => {
+  // Only when carousel area is in focus (not typing in an input)
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (e.key === 'ArrowLeft') recipeBox.prev();
+  if (e.key === 'ArrowRight') recipeBox.next();
+});
+
 // --- Initialize Recipe Search ---
 const recipeSearch = new RecipeSearch('recipe-search-container', () => {
   recipeBox.refresh();
@@ -47,20 +62,46 @@ recipeSearch.init();
 const overlay = document.getElementById('custom-card-overlay');
 const customForm = document.getElementById('custom-card-form');
 
-document.getElementById('carousel-add')?.addEventListener('click', () => {
+function openCustomModal() {
   overlay.style.display = 'flex';
-});
+  const titleInput = document.getElementById('custom-title');
+  if (titleInput) titleInput.focus();
+}
 
-document.getElementById('custom-card-cancel')?.addEventListener('click', () => {
+function closeCustomModal() {
   overlay.style.display = 'none';
   customForm.reset();
-});
+  // Return focus to the add button
+  document.getElementById('carousel-add')?.focus();
+}
+
+document.getElementById('carousel-add')?.addEventListener('click', openCustomModal);
+
+document.getElementById('custom-card-cancel')?.addEventListener('click', closeCustomModal);
 
 // Close overlay on background click
 overlay?.addEventListener('click', (e) => {
-  if (e.target === overlay) {
-    overlay.style.display = 'none';
-    customForm.reset();
+  if (e.target === overlay) closeCustomModal();
+});
+
+// Close overlay on Escape key + focus trap
+overlay?.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeCustomModal();
+    return;
+  }
+  // Focus trap: keep Tab within the modal
+  if (e.key === 'Tab') {
+    const focusable = overlay.querySelectorAll('input, select, textarea, button, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 });
 
@@ -78,7 +119,7 @@ customForm?.addEventListener('submit', (e) => {
     ingredients: [],
     category: document.getElementById('custom-category').value,
     dateAdded: new Date().toISOString(),
-    sourceUrl: '',
+    sourceUrl: document.getElementById('custom-link').value.trim(),
     tiktokUrl: document.getElementById('custom-tiktok').value.trim(),
     notes: document.getElementById('custom-notes').value.trim(),
     readyInMinutes: 0,
@@ -107,8 +148,12 @@ if (filterTabs) {
     if (e.target.classList.contains('filter-tab')) {
       filterTabs
         .querySelectorAll('.filter-tab')
-        .forEach((tab) => tab.classList.remove('active'));
+        .forEach((tab) => {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+        });
       e.target.classList.add('active');
+      e.target.setAttribute('aria-selected', 'true');
       recipeBox.setFilter(e.target.dataset.filter);
     }
   });
@@ -130,15 +175,9 @@ if (searchBtn && searchInput) {
   });
 }
 
-// --- "Add Your First Recipe" button scrolls to search panel ---
+// --- "Add Your First Recipe" button opens custom card modal ---
 document.getElementById('open-search-btn')?.addEventListener('click', () => {
-  // Open the custom card modal overlay
-  const overlay = document.getElementById('custom-card-overlay');
-  if (overlay) {
-    overlay.style.display = 'flex';
-    const titleInput = document.getElementById('custom-title');
-    if (titleInput) titleInput.focus();
-  }
+  openCustomModal();
 });
 
 // --- Trash Zone: drag-and-drop delete ---

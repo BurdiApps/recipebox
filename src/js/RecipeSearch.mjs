@@ -89,7 +89,11 @@ export default class RecipeSearch {
 
     if (!query) return;
 
-    resultsContainer.innerHTML = '<p class="search-loading">Searching...</p>';
+    resultsContainer.innerHTML = `
+      <div class="loading-spinner" role="status">
+        <div class="spinner"></div>
+        <p>Searching recipes...</p>
+      </div>`;
 
     const filters = this._getFilters();
     const results = await this.services.searchRecipes(query, filters);
@@ -112,7 +116,7 @@ export default class RecipeSearch {
         return `
         <div class="search-result-card" data-id="${recipe.id}">
           <img src="${recipe.image || '/images/icons/placeholder.svg'}"
-               alt="${recipe.title}"
+               alt=""
                onerror="this.src='/images/icons/placeholder.svg'" />
           <div class="search-result-info">
             <h4>${recipe.title}</h4>

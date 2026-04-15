@@ -73,10 +73,32 @@ export async function loadHeaderFooter() {
   if (headerElement) {
     const headerTemplate = await loadTemplate('/partials/header.html');
     renderWithTemplate(headerTemplate, headerElement);
+    _initNavbarToggle(headerElement);
   }
 
   if (footerElement) {
     const footerTemplate = await loadTemplate('/partials/footer.html');
     renderWithTemplate(footerTemplate, footerElement);
   }
+}
+
+// Vanilla JS hamburger toggle (no Bootstrap JS needed)
+function _initNavbarToggle(header) {
+  const toggler = header.querySelector('.navbar-toggler');
+  const menu = header.querySelector('.navbar-collapse');
+  if (!toggler || !menu) return;
+
+  toggler.addEventListener('click', () => {
+    const isOpen = menu.classList.contains('show');
+    menu.classList.toggle('show');
+    toggler.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  // Close menu when a nav link is clicked (mobile UX)
+  menu.querySelectorAll('.nav-link, .badge-github').forEach((link) => {
+    link.addEventListener('click', () => {
+      menu.classList.remove('show');
+      toggler.setAttribute('aria-expanded', 'false');
+    });
+  });
 }

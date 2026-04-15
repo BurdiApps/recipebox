@@ -12,8 +12,8 @@
 :root {
   --color-primary: #C41E3D;       /* Gingham red — buttons, accents */
   --color-cream: #FFF8E7;         /* Cream — card backgrounds */
-  --color-brown: #8B5E3C;         /* Warm brown — box/wood elements */
-  --color-rose: #F4A4A0;          /* Faded rose — hover states */
+  --color-brown: #7A5230;         /* Warm brown — box/wood elements (AA compliant) */
+  --color-rose: #D4706B;          /* Faded rose — hover states */
   --color-text: #333333;          /* Charcoal — body text */
   --color-bg: #FAFAFA;            /* Light gray — page background */
 
@@ -24,6 +24,32 @@
 /* --- Base Styles --- */
 * {
   box-sizing: border-box;
+}
+
+/* --- Skip Link (Accessibility) --- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 0.375rem 0.375rem;
+  font-weight: 700;
+  z-index: 9999;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+  color: #fff;
+}
+
+/* --- Focus Visible (Accessibility) --- */
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 body {
@@ -89,7 +115,8 @@ a:hover {
   background-color: #fff;
   border-bottom: 3px solid var(--color-brown);
   padding: 0.75rem 1rem;
-  box-shadow: 0 2px 8px rgba(139, 94, 60, 0.1);
+  box-shadow: 0 2px 12px rgba(122, 82, 48, 0.12);
+  transition: box-shadow 0.3s;
 }
 
 .navbar-brand {
@@ -99,6 +126,28 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.navbar-brand:hover {
+  opacity: 0.85;
+}
+
+.navbar-brand img {
+  width: 32px;
+  height: 32px;
+}
+
+/* Vanilla collapse (no Bootstrap JS) */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .navbar-collapse.show {
+    max-height: 300px;
+  }
 }
 
 .nav-link {
@@ -114,8 +163,23 @@ a:hover {
   color: var(--color-primary) !important;
 }
 
+.badge-github {
+  display: inline-block;
+  background: linear-gradient(135deg, #f5c842, #e0a800);
+  color: #333;
+  padding: 0.35rem 0.85rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
 .badge-github:hover {
-  background-color: #e0b000;
+  background: linear-gradient(135deg, #e0b000, #c99800);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(224, 176, 0, 0.3);
+  color: #333;
 }
 
 /* --- Footer --- */
@@ -209,8 +273,9 @@ footer {
 .step-card:hover {
   transform: translateY(-6px) rotate(-0.5deg);
   box-shadow:
-    4px 8px 20px rgba(139, 94, 60, 0.25),
+    4px 8px 24px rgba(122, 82, 48, 0.25),
     inset 0 0 40px rgba(255, 248, 231, 0.5);
+  border-color: var(--color-brown);
 }
 
 .step-number {
@@ -260,7 +325,6 @@ img.step-icon {
   background-color: var(--color-primary);
   color: #fff;
   border: 2px solid var(--color-primary);
-  border: none;
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
   font-family: var(--font-body);
@@ -269,11 +333,18 @@ img.step-icon {
   cursor: pointer;
   display: inline-block;
   margin-top: 1rem;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-get-started:hover {
   background-color: #a01830;
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(196, 30, 61, 0.3);
+}
+
+.btn-get-started:active {
+  transform: translateY(0);
 }
 
 /* --- Recipe Box Page --- */
@@ -285,12 +356,17 @@ img.step-icon {
 .search-bar {
   max-width: 400px;
   margin: 0 auto 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .search-bar .input-group {
   border: 2px solid var(--color-brown);
   border-radius: 0.375rem;
   overflow: hidden;
+  width: 100%;
 }
 
 .search-bar input {
@@ -305,6 +381,24 @@ img.step-icon {
   background-color: var(--color-cream);
   border: none;
   color: var(--color-brown);
+}
+
+.btn-retake-quiz {
+  background: none;
+  border: 1.5px solid var(--color-brown);
+  border-radius: 2rem;
+  padding: 0.3rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-brown);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-retake-quiz:hover {
+  background: var(--color-brown);
+  color: #fff;
 }
 
 /* --- Filter Tabs --- */
@@ -325,17 +419,20 @@ img.step-icon {
   font-size: 0.9rem;
   color: var(--color-brown);
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .filter-tab:hover {
   background-color: var(--color-rose);
   color: #fff;
   border-color: var(--color-rose);
+  transform: translateY(-1px);
 }
 
 .filter-tab.active {
   background-color: var(--color-brown);
   color: #fff;
+  box-shadow: 0 2px 8px rgba(122, 82, 48, 0.25);
 }
 
 /* --- Recipe Box Layout --- */
@@ -361,20 +458,64 @@ img.step-icon {
 
 .box-visual {
   position: relative;
-  background: linear-gradient(180deg, #a0713a 0%, #6d3f1a 100%);
-  border: 4px solid #5a3012;
-  border-radius: 8px 8px 6px 6px;
-  padding: 12px 12px 16px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba(0, 0, 0, 0.04) 8px,
+      rgba(0, 0, 0, 0.04) 9px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 40px,
+      rgba(255, 255, 255, 0.06) 40px,
+      rgba(255, 255, 255, 0.06) 41px
+    ),
+    linear-gradient(180deg, #a67c52 0%, #7a5230 40%, #5a3012 100%);
+  border: 4px solid #4a2810;
+  border-radius: 10px 10px 8px 8px;
+  padding: 14px 14px 18px;
   box-shadow:
-    inset 0 2px 8px rgba(0, 0, 0, 0.25),
-    0 6px 20px rgba(90, 48, 18, 0.35);
+    inset 0 2px 12px rgba(0, 0, 0, 0.3),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.08),
+    0 8px 28px rgba(90, 48, 18, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.15);
   overflow: visible;
+  transition: box-shadow 0.3s ease;
 }
 
+.box-visual:hover {
+  box-shadow:
+    inset 0 2px 12px rgba(0, 0, 0, 0.3),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.08),
+    0 12px 36px rgba(90, 48, 18, 0.45),
+    0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Box lid — decorative strip across top */
 .box-lid {
   position: absolute;
-  top: -18px;
+  top: -12px;
   left: -4px;
+  right: -4px;
+  height: 20px;
+  background:
+    linear-gradient(180deg, #c4956a 0%, #a67c52 100%);
+  border: 3px solid #4a2810;
+  border-radius: 6px 6px 0 0;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s;
+  transform-origin: top center;
+}
+
+/* When box opens, lid tilts back */
+.box-open .box-lid {
+  transform: perspective(400px) rotateX(-85deg) translateY(-6px);
+  opacity: 0.7;
 }
 
 /* --- Flip Card Container (inside carousel) --- */
@@ -456,13 +597,18 @@ img.step-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .carousel-btn:hover {
   background-color: var(--color-brown);
   color: #fff;
-  transform: scale(1.1);
+  transform: scale(1.12);
+  box-shadow: 0 3px 10px rgba(122, 82, 48, 0.3);
+}
+
+.carousel-btn:active {
+  transform: scale(0.95);
 }
 
 .carousel-btn-add {
@@ -487,24 +633,30 @@ img.step-icon {
   font-family: var(--font-display);
 }
 
-/* --- Card Coming Out of Box Animation (2-stage) --- */
+/* --- Card Coming Out of Box Animation --- */
 @keyframes cardRiseFromBox {
   0% {
     opacity: 0;
-    transform: translateY(80px) scale(0.85);
+    transform: translateY(60px) scale(0.88) rotate(-1deg);
+    filter: blur(2px);
   }
-  70% {
+  60% {
     opacity: 1;
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-6px) scale(1.01) rotate(0deg);
+    filter: blur(0);
+  }
+  80% {
+    transform: translateY(2px) scale(0.995);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1) rotate(0deg);
+    filter: blur(0);
   }
 }
 
 .card-from-box {
-  animation: cardRiseFromBox 0.6s ease-out both;
+  animation: cardRiseFromBox 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* --- Flying clone that goes from box to grid --- */
@@ -538,57 +690,57 @@ img.step-icon {
 @keyframes slideInLeft {
   0% {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(80%) scale(0.95);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 
 @keyframes slideOutLeft {
   0% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateX(-100%);
+    transform: translateX(-80%) scale(0.95);
   }
 }
 
 @keyframes slideInRight {
   0% {
     opacity: 0;
-    transform: translateX(-100%);
+    transform: translateX(-80%) scale(0.95);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 
 @keyframes slideOutRight {
   0% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(80%) scale(0.95);
   }
 }
 
 .slide-left {
-  animation: slideInLeft 0.4s ease-out both;
+  animation: slideInLeft 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .slide-right {
-  animation: slideInRight 0.4s ease-out both;
+  animation: slideInRight 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .slide-out-left {
-  animation: slideOutLeft 0.3s ease-in forwards;
+  animation: slideOutLeft 0.25s ease-in forwards;
   position: absolute;
   top: 0;
   left: 0;
@@ -596,7 +748,7 @@ img.step-icon {
 }
 
 .slide-out-right {
-  animation: slideOutRight 0.3s ease-in forwards;
+  animation: slideOutRight 0.25s ease-in forwards;
   position: absolute;
   top: 0;
   left: 0;
@@ -615,22 +767,23 @@ img.step-icon {
 .grid-thumb {
   background-color: var(--color-cream);
   border: 2px solid #e0d5c0;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, transform 0.25s, box-shadow 0.25s;
 }
 
 .grid-thumb:hover {
   border-color: var(--color-brown);
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(139, 94, 60, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(122, 82, 48, 0.2);
 }
 
 .grid-thumb.active {
   border-color: var(--color-primary);
-  border-width: 3px;
-  box-shadow: 0 0 0 2px rgba(196, 30, 61, 0.2);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(196, 30, 61, 0.15);
+  transform: translateY(-2px);
 }
 
 @keyframes thumbLand {
@@ -691,12 +844,13 @@ img.step-icon {
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border: 3px solid var(--color-brown);
+  border: 2px solid var(--color-brown);
   border-radius: 0.5rem;
   overflow: hidden;
   background-color: var(--color-cream);
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Card Front --- */
@@ -711,7 +865,7 @@ img.step-icon {
   flex: 1;
 }
 
-.card-front-body h4 {
+.card-front-body h2 {
   font-size: 1.1rem;
   margin-bottom: 0.25rem;
   color: var(--color-brown);
@@ -719,7 +873,7 @@ img.step-icon {
 
 .card-meta {
   font-size: 0.8rem;
-  color: #888;
+  color: #666;
   margin: 0;
 }
 
@@ -752,10 +906,13 @@ img.step-icon {
 .card-back-scroll {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 0.25rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-.card-back h4 {
+.card-back h2 {
   font-size: 1.1rem;
   color: var(--color-brown);
   margin-bottom: 0.75rem;
@@ -767,7 +924,7 @@ img.step-icon {
   margin-bottom: 1rem;
 }
 
-.card-section h5 {
+.card-section h3 {
   font-family: var(--font-display);
   font-size: 0.95rem;
   color: var(--color-primary);
@@ -859,13 +1016,17 @@ img.step-icon {
 
 /* --- Card Remove Animation --- */
 .card-removing {
-  animation: cardFadeOut 0.3s ease forwards;
+  animation: cardFadeOut 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 @keyframes cardFadeOut {
-  to {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+  100% {
     opacity: 0;
-    transform: scale(0.9) translateY(10px);
+    transform: scale(0.85) translateY(20px) rotate(2deg);
   }
 }
 
@@ -912,8 +1073,13 @@ img.step-icon {
   padding: 1.5rem;
   background-color: #fff;
   border: 2px solid var(--color-brown);
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 12px rgba(139, 94, 60, 0.1);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 16px rgba(122, 82, 48, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.search-panel:focus-within {
+  box-shadow: 0 6px 24px rgba(122, 82, 48, 0.18);
 }
 
 .search-panel h3 {
@@ -942,7 +1108,7 @@ img.step-icon {
 .search-loading,
 .search-empty {
   text-align: center;
-  color: #888;
+  color: #666;
   padding: 1rem 0;
   font-style: italic;
 }
@@ -957,11 +1123,13 @@ img.step-icon {
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   background-color: var(--color-cream);
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .search-result-card:hover {
   border-color: var(--color-brown);
+  transform: translateX(3px);
+  box-shadow: 0 2px 8px rgba(122, 82, 48, 0.12);
 }
 
 .search-result-card img {
@@ -988,7 +1156,7 @@ img.step-icon {
 
 .search-result-info p {
   font-size: 0.78rem;
-  color: #888;
+  color: #666;
   margin: 0;
 }
 
@@ -1003,12 +1171,13 @@ img.step-icon {
   font-size: 0.8rem;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
 }
 
 .btn-save-recipe:hover {
   background-color: var(--color-primary);
   color: #fff;
+  transform: scale(1.05);
 }
 
 .btn-save-recipe.saved {
@@ -1019,13 +1188,91 @@ img.step-icon {
 }
 
 /* --- TikTok Embed Section --- */
+.tiktok-section {
+  overflow: hidden;
+}
+
 .tiktok-section h5 {
   margin-bottom: 0.5rem;
 }
 
+.tiktok-preview {
+  display: block;
+  position: relative;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.tiktok-preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0.375rem;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.tiktok-preview:hover img {
+  transform: scale(1.03);
+  filter: brightness(0.85);
+}
+
+.tiktok-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: background 0.2s;
+}
+
+.tiktok-preview:hover .tiktok-play-btn {
+  background: rgba(196, 30, 61, 0.85);
+}
+
+.tiktok-fallback {
+  height: 120px;
+  background: linear-gradient(135deg, #010101 0%, #1a1a2e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiktok-fallback-icon {
+  font-size: 3rem;
+  color: #25f4ee;
+}
+
+.tiktok-author {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0.35rem 0 0.1rem;
+}
+
+.tiktok-title {
+  font-size: 0.72rem;
+  color: #555;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .tiktok-placeholder {
   font-size: 0.8rem;
-  color: #aaa;
+  color: #666;
   font-style: italic;
   margin-bottom: 0.5rem;
 }
@@ -1043,16 +1290,34 @@ img.step-icon {
 .tiktok-embed-container {
   margin-bottom: 0.5rem;
   font-size: 0.8rem;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Constrain the TikTok blockquote embed */
+.tiktok-embed-container blockquote,
+.tiktok-embed-container .tiktok-embed {
+  max-width: 100% !important;
+  min-width: unset !important;
+  margin: 0 !important;
+}
+
+.tiktok-embed-container iframe {
+  max-width: 100% !important;
+  max-height: 180px;
 }
 
 /* --- Empty Box State --- */
 .empty-box {
   text-align: center;
   padding: 3rem 1rem;
-  color: #999;
+  color: #666;
 }
 
-.empty-box h3 {
+.empty-box h2 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -1079,6 +1344,18 @@ img.step-icon {
   width: 90%;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes modalSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .quiz-modal h2 {
@@ -1249,9 +1526,10 @@ img.step-icon {
   max-width: 450px;
   width: 90%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.custom-card-modal h3 {
+.custom-card-modal h2 {
   font-size: 1.5rem;
   color: var(--color-brown);
   margin-bottom: 0.5rem;
@@ -1280,6 +1558,36 @@ img.step-icon {
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 1.25rem;
+}
+
+/* --- Loading Spinner --- */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  gap: 1rem;
+}
+
+.loading-spinner p {
+  font-family: var(--font-display);
+  color: var(--color-brown);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--color-cream);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* --- Responsive --- */

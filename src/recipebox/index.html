@@ -5,41 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/images/icons/grb_favicon.png" />
     <title>Grandma's Recipe Box | My Recipe Box</title>
+    <meta name="description" content="Browse, search, and organize your saved recipes. Add new recipes from Spoonacular or TikTok." />
     <link rel="stylesheet" href="/css/style.css" />
     <script src="/js/recipebox.js" type="module"></script>
   </head>
 
   <body>
-    <header id="main-header"></header>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <header id="main-header" role="banner"></header>
 
-    <main>
+    <main id="main-content">
       <section class="recipebox-header">
         <div class="container">
+          <h1 class="visually-hidden">My Recipe Box</h1>
           <!-- Search Bar -->
           <div class="search-bar">
             <div class="input-group">
               <input type="text" id="box-search" class="form-control" placeholder="Search your recipes..." aria-label="Search saved recipes" />
               <button class="btn" type="button" id="box-search-btn">🔍</button>
             </div>
+            <button class="btn-retake-quiz" id="retake-quiz-btn" title="Retake the recipe quiz">Retake Quiz</button>
           </div>
 
           <!-- Filter Tabs -->
-          <div class="filter-tabs" id="filter-tabs">
-            <button class="filter-tab active" data-filter="all">All</button>
-            <button class="filter-tab" data-filter="breakfast">Breakfast</button>
-            <button class="filter-tab" data-filter="lunch">Lunch</button>
-            <button class="filter-tab" data-filter="dinner">Dinner</button>
-            <button class="filter-tab" data-filter="dessert">Dessert</button>
+          <div class="filter-tabs" id="filter-tabs" role="tablist" aria-label="Filter recipes by category">
+            <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All</button>
+            <button class="filter-tab" data-filter="breakfast" role="tab" aria-selected="false">Breakfast</button>
+            <button class="filter-tab" data-filter="lunch" role="tab" aria-selected="false">Lunch</button>
+            <button class="filter-tab" data-filter="dinner" role="tab" aria-selected="false">Dinner</button>
+            <button class="filter-tab" data-filter="dessert" role="tab" aria-selected="false">Dessert</button>
           </div>
         </div>
       </section>
 
       <!-- Recipe Box Display -->
-      <section class="recipe-box-section">
+      <section class="recipe-box-section" aria-label="Recipe Box">
         <div class="container">
           <div class="recipe-box-layout">
             <!-- Featured Card Carousel (the "box") -->
-            <div class="recipe-box-carousel">
+            <div class="recipe-box-carousel" role="region" aria-label="Recipe card carousel" aria-roledescription="carousel">
               <div class="box-visual" id="box-visual">
                 <div class="box-lid" id="box-lid"></div>
                 <div class="box-body">
@@ -53,7 +57,7 @@
                 <button class="carousel-btn carousel-btn-add" id="carousel-add" aria-label="Add new recipe">＋</button>
                 <button class="carousel-btn" id="carousel-next" aria-label="Next card">▶</button>
               </div>
-              <p class="carousel-counter" id="carousel-counter"></p>
+              <p class="carousel-counter" id="carousel-counter" aria-live="polite"></p>
             </div>
 
             <!-- Side Card Grid (desktop only) -->
@@ -64,14 +68,14 @@
 
           <!-- Empty State -->
           <div class="empty-box" id="empty-box" style="display: none;">
-            <h3>Your recipe box is empty!</h3>
+            <h2>Your recipe box is empty!</h2>
             <p>Search for recipes or take the quiz to get started.</p>
             <button class="btn-get-started" id="open-search-btn">Add Your First Recipe</button>
           </div>
 
           <!-- Drag-to-Trash Drop Zone -->
-          <div class="trash-zone" id="trash-zone">
-            <span>🗑</span>
+          <div class="trash-zone" id="trash-zone" role="region" aria-label="Drop zone to delete recipe">
+            <span aria-hidden="true">🗑</span>
             <p>Drop here to delete</p>
           </div>
         </div>
@@ -87,17 +91,21 @@
     <div id="quiz-container"></div>
 
     <!-- Custom Card Modal -->
-    <div class="custom-card-overlay" id="custom-card-overlay" style="display: none;">
+    <div class="custom-card-overlay" id="custom-card-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="custom-card-heading">
       <div class="custom-card-modal">
-        <h3>Create a Custom Card</h3>
-        <p>Add your own recipe — paste a TikTok link, give it a name, and save!</p>
+        <h2 id="custom-card-heading">Create a Custom Card</h2>
+        <p>Add your own recipe — paste a link, give it a name, and save!</p>
         <form id="custom-card-form">
           <div class="custom-field">
             <label for="custom-title">Recipe Title *</label>
             <input type="text" id="custom-title" class="form-control" placeholder="e.g. Grandma's Secret Cookies" required />
           </div>
           <div class="custom-field">
-            <label for="custom-tiktok">TikTok URL</label>
+            <label for="custom-link">Recipe Link</label>
+            <input type="url" id="custom-link" class="form-control" placeholder="https://example.com/recipe..." />
+          </div>
+          <div class="custom-field">
+            <label for="custom-tiktok">TikTok URL (optional)</label>
             <input type="url" id="custom-tiktok" class="form-control" placeholder="https://www.tiktok.com/..." />
           </div>
           <div class="custom-field">
@@ -121,6 +129,6 @@
       </div>
     </div>
 
-    <footer id="main-footer"></footer>
+    <footer id="main-footer" role="contentinfo"></footer>
   </body>
 </html>
