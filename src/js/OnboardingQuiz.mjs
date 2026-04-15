@@ -174,7 +174,9 @@ export default class OnboardingQuiz {
     `;
 
     const params = mapQuizToParams(this.answers);
-    const recipes = await this.services.searchRecipes('', params);
+    // Use the selected cuisine as query if available, otherwise a broad term
+    const query = this.answers.cuisine || 'dinner';
+    const recipes = await this.services.searchRecipes(query, params);
 
     // Save the starter recipes to localStorage
     recipes.forEach((recipe) => {
@@ -209,7 +211,7 @@ export default class OnboardingQuiz {
 export function mapQuizToParams(answers) {
   const params = {};
 
-  if (answers.cuisine && answers.cuisine !== 'american') {
+  if (answers.cuisine) {
     params.cuisine = answers.cuisine;
   }
 
